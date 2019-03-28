@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+#=======================HEADER========================================|
+#AUTOR
+# Jefferson 'slackjeff' Rocha <root@slackjeff.com.br>
+#
+#PROGRAMA
+# HACK.key
+#=====================================================================|
+#####################INICIALIZAÇÃO
+trap '' int # Trapando CTRL+C
+
+#====================VARIAVEIS
+# Adicione o UUID do seu dispositivo
+# nesta variável. Para isto use o comando
+# blkid.
+my_uuid='954dbce4-91e1-4e39-a674-085e9daf8ce2'
+pendrive="$(blkid -U "$my_uuid")" # Converte UUID
+mnt_usb='/mnt/usb/'               # Ponto de Montagem
+
+#====================TESTES
+[[ ! -d "$mnt_usb" ]] && mkdir "$mnt_usb"
+
+#====================FUNCOES
+_BYE()
+{
+    #shutdown -r now
+    shutdown -h now
+}
+
+# Montar e Desmontar Pendrive
+umount -Rf "$mnt_usb" &>/dev/null
+if ! mount -t auto "$pendrive" "$mnt_usb" &>/dev/null; then
+    _BYE
+fi
+
+# Verificando se arquivos existem.
+# Se não existir vlw e até próxima.
+for check in '/etc/usb_key' "${mnt_usb}pen_key"; do
+    if [[ ! -e "$check" ]]; then
+        _BYE
+    else
+       # Carregando hashs
+       source "$check" &>/dev/null
+    fi
+done
+
+# Conferindo hashs
+if [[ "$usb_key" != "$pen_key" ]]; then
+    _BYE
+fi
