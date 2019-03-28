@@ -1,6 +1,6 @@
 # hack.key
 
-**Gerando hash**
+**Gerando hash**<br>
 `
 hash=$(echo "$RANDOM" | sha256sum | awk '{print $1}')<br>
 echo "usb_key=\"$hash\"" >> /etc/usb_key <br>
