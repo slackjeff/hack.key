@@ -2,8 +2,10 @@
 
 **Gerando hash**<br>
 `
-hash=$(echo "$RANDOM" | sha256sum | awk '{print $1}') \\
+hash=$(echo "$RANDOM" | sha256sum | awk '{print $1}')
+
 echo "usb_key=\"$hash\"" >> /etc/usb_key
+
 **Copie a mesma hash para dentro do pendrive e troque a variável por: pc_key="$hash"**
 `
 `
